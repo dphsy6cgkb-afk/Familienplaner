@@ -1,192 +1,676 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>Familienplaner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Unser Familienplaner</title>
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+:root {
+  --pink:#ffd6e3;
+  --orange:#ffe1c2;
+  --yellow:#fff1b8;
+  --green:#dff1c5;
+  --blue:#d3ecfa;
+  --purple:#e5d7f8;
+  --card:#fff;
+  --text:#263238;
+  --muted:#68757d;
+  --accent:#ec4d88;
+}
 
-    body {
-      margin: 0;
-      padding: 24px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f4f5f7;
-      color: #222;
-    }
+* { box-sizing:border-box; }
 
-    .app {
-      max-width: 900px;
-      margin: auto;
-    }
+body {
+  margin:0;
+  background:#f7f7f8;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
 
-    h1 {
-      margin-bottom: 6px;
-    }
+header {
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid #ddd;
+  padding:14px;
+}
 
-    #datum {
-      color: #666;
-      margin-bottom: 24px;
-    }
+.headerTop {
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
 
-    .kinder {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-    }
+h1 {
+  margin:0;
+  font-size:27px;
+}
 
-    .kind {
-      border: 2px solid #ddd;
-      background: white;
-      border-radius: 16px;
-      padding: 16px 24px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+#datum {
+  color:var(--muted);
+  margin-top:3px;
+}
 
-    .kind.aktiv {
-      border-color: #333;
-      background: #e7eefc;
-    }
+.elternButton {
+  border:0;
+  border-radius:12px;
+  background:#ececef;
+  padding:12px 15px;
+  font-size:16px;
+}
 
-    .aufgabe {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      background: white;
-      border: 2px solid #ddd;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 14px;
-      font-size: 22px;
-      text-align: left;
-      cursor: pointer;
-    }
+.app {
+  max-width:900px;
+  margin:auto;
+  padding:16px 16px 70px;
+}
 
-    .haken {
-      width: 46px;
-      height: 46px;
-      flex-shrink: 0;
-      border: 3px solid #bbb;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
+.kinder {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
 
-    .aufgabe.erledigt {
-      opacity: 0.5;
-    }
+.kind {
+  min-height:70px;
+  border:2px solid #ddd;
+  border-radius:18px;
+  background:white;
+  font-size:20px;
+  font-weight:700;
+}
 
-    .aufgabe.erledigt .haken {
-      background: #45a85a;
-      color: white;
-      border-color: #45a85a;
-    }
+.kind.aktiv {
+  border-color:var(--accent);
+  background:#fff0f5;
+}
 
-    .zeit {
-      display: block;
-      font-size: 15px;
-      color: #777;
-      margin-top: 4px;
-    }
-  </style>
+.status {
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:18px;
+  border:2px solid #eee;
+}
+
+.statusTitel {
+  font-weight:800;
+  font-size:18px;
+}
+
+#statusText {
+  margin-top:5px;
+  color:var(--muted);
+}
+
+.progress {
+  height:10px;
+  background:#eee;
+  border-radius:20px;
+  margin-top:12px;
+  overflow:hidden;
+}
+
+#progressBar {
+  height:100%;
+  width:0;
+  background:var(--accent);
+  transition:.3s;
+}
+
+.gruppeTitel {
+  margin:22px 4px 8px;
+  font-size:14px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:.7px;
+}
+
+.aufgabe {
+  width:100%;
+  display:grid;
+  grid-template-columns:75px 1fr 54px;
+  align-items:center;
+  gap:12px;
+  border:2px solid transparent;
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:9px;
+  text-align:left;
+  color:var(--text);
+  font:inherit;
+}
+
+.aufgabe.aktuell {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(236,77,136,.12);
+}
+
+.aufgabe.erledigt {
+  opacity:.48;
+}
+
+.zeit {
+  font-size:18px;
+  font-weight:800;
+}
+
+.inhalt strong {
+  display:block;
+  font-size:19px;
+}
+
+.inhalt small {
+  display:block;
+  color:#526069;
+  font-size:14px;
+  margin-top:3px;
+}
+
+.haken {
+  width:46px;
+  height:46px;
+  justify-self:end;
+  border-radius:50%;
+  border:3px solid rgba(0,0,0,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+  font-weight:bold;
+  background:rgba(255,255,255,.65);
+}
+
+.erledigt .haken {
+  background:#43a85b;
+  border-color:#43a85b;
+  color:white;
+}
+
+.eltern {
+  display:none;
+  max-width:900px;
+  margin:16px auto;
+  padding:16px;
+  background:white;
+  border-radius:20px;
+  border:2px solid #ddd;
+}
+
+.eltern.offen { display:block; }
+
+.eltern h2 { margin-top:0; }
+
+.feld {
+  margin-bottom:15px;
+}
+
+.feld label {
+  display:block;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.feld input {
+  width:100%;
+  min-height:46px;
+  border:1px solid #bbb;
+  border-radius:10px;
+  padding:10px;
+  font-size:17px;
+}
+
+.editorZeile {
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.editorZeile input {
+  min-width:0;
+}
+
+.speichern {
+  width:100%;
+  min-height:52px;
+  border:0;
+  border-radius:14px;
+  background:#263238;
+  color:white;
+  font-size:18px;
+  font-weight:700;
+}
+
+.hinweis {
+  font-size:13px;
+  color:var(--muted);
+  margin-top:10px;
+}
+
+@media(max-width:600px) {
+  h1 { font-size:22px; }
+  .aufgabe {
+    grid-template-columns:62px 1fr 48px;
+    padding:12px;
+  }
+  .zeit { font-size:16px; }
+  .inhalt strong { font-size:17px; }
+}
+</style>
 </head>
 
 <body>
-  <main class="app">
-    <h1>Unser Familienplaner</h1>
-    <div id="datum"></div>
 
-    <div class="kinder">
-      <button class="kind aktiv" data-kind="Kind 1">👧 Kind 1</button>
-      <button class="kind" data-kind="Kind 2">👦 Kind 2</button>
+<header>
+  <div class="headerTop">
+    <div>
+      <h1>🌈 Mein Tag</h1>
+      <div id="datum"></div>
     </div>
+    <button class="elternButton" id="elternButton">⚙️ Eltern</button>
+  </div>
+</header>
 
-    <div id="aufgaben"></div>
-  </main>
+<section class="eltern" id="elternBereich">
+  <h2>Elternbereich</h2>
 
-  <script>
-    let aktuellesKind = "Kind 1";
+  <div class="feld">
+    <label>Name Kind 1</label>
+    <input id="name1">
+  </div>
 
-    const aufgaben = [
-      { id: "zaehne-morgens", text: "🪥 Zähne putzen", zeit: "Morgens" },
-      { id: "turnbeutel", text: "🎒 Turnbeutel packen", zeit: "Mittwoch", tag: 3 },
-      { id: "zimmer", text: "🧸 Zimmer aufräumen", zeit: "Nachmittags" },
-      { id: "zaehne-abends", text: "🪥 Zähne putzen", zeit: "Abends" }
+  <div class="feld">
+    <label>Name Kind 2</label>
+    <input id="name2">
+  </div>
+
+  <h3>Tagesablauf bearbeiten</h3>
+  <div id="aufgabenEditor"></div>
+
+  <button class="speichern" id="speichern">
+    Änderungen speichern
+  </button>
+
+  <div class="hinweis">
+    Die Einstellungen werden nur auf diesem iPad gespeichert.
+  </div>
+</section>
+
+<main class="app">
+
+  <div class="kinder">
+    <button class="kind aktiv" id="kind1"></button>
+    <button class="kind" id="kind2"></button>
+  </div>
+
+  <section class="status">
+    <div class="statusTitel">💗 Wir sind gerade hier</div>
+    <div id="statusText"></div>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+  </section>
+
+  <div id="liste"></div>
+
+</main>
+
+<script>
+const standardAufgaben = [
+  {
+    zeit:"06:00",
+    titel:"☀️ Aufstehen",
+    text:"Ich stehe auf, gehe auf die Toilette und ziehe mich an.",
+    gruppe:"MORGEN"
+  },
+  {
+    zeit:"06:15",
+    titel:"🍎 Frühstück",
+    text:"Frühstücken und Energie für den Tag tanken.",
+    gruppe:"MORGEN"
+  },
+  {
+    zeit:"06:35",
+    titel:"🪥 Zähne, Haare, Tasche",
+    text:"Zähne putzen, Haare machen und Schultasche kontrollieren.",
+    gruppe:"MORGEN"
+  },
+  {
+    zeit:"06:50",
+    titel:"👟 Fertig machen",
+    text:"Jacke und Schuhe an – los geht's.",
+    gruppe:"MORGEN"
+  },
+  {
+    zeit:"06:55",
+    titel:"🚌 Zum Schulbus",
+    text:"Auf zum Schulbus.",
+    gruppe:"MORGEN"
+  },
+  {
+    zeit:"07:00",
+    titel:"🎓 Schule",
+    text:"Schule, lernen, spielen und Freunde treffen.",
+    gruppe:"SCHULE"
+  },
+  {
+    zeit:"16:00",
+    titel:"🏠 Ankommen",
+    text:"Wieder zu Hause ankommen und kurz durchatmen.",
+    gruppe:"NACHMITTAG"
+  },
+  {
+    zeit:"16:05",
+    titel:"🍎 Snack & erzählen",
+    text:"Etwas essen, trinken und vom Tag erzählen.",
+    gruppe:"NACHMITTAG"
+  },
+  {
+    zeit:"16:30",
+    titel:"🧩 Freie Zeit",
+    text:"Spielen, basteln oder rausgehen.",
+    gruppe:"NACHMITTAG"
+  },
+  {
+    zeit:"17:15",
+    titel:"📝 Hausaufgaben",
+    text:"Schulische Aufgaben erledigen.",
+    gruppe:"NACHMITTAG"
+  },
+  {
+    zeit:"17:45",
+    titel:"⚽ Bewegung",
+    text:"Bewegen, rausgehen oder mit der Familie spielen.",
+    gruppe:"NACHMITTAG"
+  },
+  {
+    zeit:"18:15",
+    titel:"🍽️ Abendessen",
+    text:"Gemeinsam Abendessen.",
+    gruppe:"ABEND"
+  },
+  {
+    zeit:"18:45",
+    titel:"🧸 Aufräumen & Schlafsachen",
+    text:"Aufräumen und Schlafsachen anziehen.",
+    gruppe:"ABEND"
+  },
+  {
+    zeit:"19:00",
+    titel:"🛁 Waschen & Zähne",
+    text:"Waschen, Zähne putzen und Toilette.",
+    gruppe:"ABEND"
+  },
+  {
+    zeit:"19:20",
+    titel:"❤️ Kuscheln & Vorlesen",
+    text:"Kuscheln, lesen und über den Tag sprechen.",
+    gruppe:"ABEND"
+  },
+  {
+    zeit:"19:30",
+    titel:"🌙 Schlafen",
+    text:"Licht aus – gute Nacht.",
+    gruppe:"ABEND"
+  }
+];
+
+let namen =
+  JSON.parse(localStorage.getItem("familienplaner-namen")) ||
+  ["Kind 1","Kind 2"];
+
+let aufgaben =
+  JSON.parse(localStorage.getItem("familienplaner-aufgaben")) ||
+  standardAufgaben;
+
+let aktuellesKind = 0;
+
+function datumKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const t = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${t}`;
+}
+
+function erledigtKey(index) {
+  return "fp-erledigt-" +
+    datumKey() + "-" +
+    aktuellesKind + "-" +
+    index;
+}
+
+function zeitInMinuten(zeit) {
+  const teile = zeit.split(":");
+  return Number(teile[0]) * 60 + Number(teile[1]);
+}
+
+function aktuelleAufgabe() {
+  const jetzt = new Date();
+  const minuten = jetzt.getHours()*60 + jetzt.getMinutes();
+
+  let aktuell = 0;
+
+  for(let i=0;i<aufgaben.length;i++) {
+    if(zeitInMinuten(aufgaben[i].zeit) <= minuten) {
+      aktuell = i;
+    }
+  }
+
+  return aktuell;
+}
+
+function aktualisiereNamen() {
+  document.getElementById("kind1").textContent =
+    "👧 " + namen[0];
+
+  document.getElementById("kind2").textContent =
+    "👦 " + namen[1];
+
+  document.getElementById("name1").value = namen[0];
+  document.getElementById("name2").value = namen[1];
+}
+
+function anzeigen() {
+  const liste = document.getElementById("liste");
+  liste.innerHTML = "";
+
+  const aktuell = aktuelleAufgabe();
+  let letzteGruppe = "";
+
+  aufgaben.forEach((a,index) => {
+
+    if(a.gruppe !== letzteGruppe) {
+      const titel = document.createElement("div");
+      titel.className = "gruppeTitel";
+      titel.textContent = a.gruppe;
+      liste.appendChild(titel);
+      letzteGruppe = a.gruppe;
+    }
+
+    const fertig =
+      localStorage.getItem(erledigtKey(index)) === "ja";
+
+    const button = document.createElement("button");
+
+    button.className =
+      "aufgabe" +
+      (fertig ? " erledigt" : "") +
+      (index === aktuell ? " aktuell" : "");
+
+    const farben = [
+      "#ffd6e3",
+      "#ffe1c2",
+      "#fff1b8",
+      "#dff1c5",
+      "#d3ecfa",
+      "#e5d7f8"
     ];
 
-    const heute = new Date();
-    const datumSchluessel = heute.toISOString().slice(0, 10);
+    button.style.background =
+      farben[index % farben.length];
 
-    document.getElementById("datum").textContent =
-      heute.toLocaleDateString("de-DE", {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-      });
+    button.innerHTML = `
+      <span class="zeit">${a.zeit}</span>
 
-    function speicherKey(id) {
-      return "familienplaner-" + datumSchluessel + "-" + aktuellesKind + "-" + id;
-    }
+      <span class="inhalt">
+        <strong>${a.titel}</strong>
+        <small>${a.text}</small>
+      </span>
 
-    function anzeigen() {
-      const bereich = document.getElementById("aufgaben");
-      bereich.innerHTML = "";
+      <span class="haken">
+        ${fertig ? "✓" : ""}
+      </span>
+    `;
 
-      aufgaben.forEach(aufgabe => {
-        if (aufgabe.tag !== undefined && heute.getDay() !== aufgabe.tag) {
-          return;
-        }
+    button.addEventListener("click", () => {
+      const key = erledigtKey(index);
 
-        const erledigt = localStorage.getItem(speicherKey(aufgabe.id)) === "ja";
+      if(localStorage.getItem(key) === "ja") {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key,"ja");
+      }
 
-        const button = document.createElement("button");
-        button.className = "aufgabe" + (erledigt ? " erledigt" : "");
-
-        button.innerHTML = `
-          <span class="haken">${erledigt ? "✓" : ""}</span>
-          <span>
-            ${aufgabe.text}
-            <span class="zeit">${aufgabe.zeit}</span>
-          </span>
-        `;
-
-        button.addEventListener("click", () => {
-          const key = speicherKey(aufgabe.id);
-
-          if (localStorage.getItem(key) === "ja") {
-            localStorage.removeItem(key);
-          } else {
-            localStorage.setItem(key, "ja");
-          }
-
-          anzeigen();
-        });
-
-        bereich.appendChild(button);
-      });
-    }
-
-    document.querySelectorAll(".kind").forEach(button => {
-      button.addEventListener("click", () => {
-        aktuellesKind = button.dataset.kind;
-
-        document.querySelectorAll(".kind").forEach(k =>
-          k.classList.remove("aktiv")
-        );
-
-        button.classList.add("aktiv");
-        anzeigen();
-      });
+      anzeigen();
     });
 
-    anzeigen();
-  </script>
+    liste.appendChild(button);
+  });
+
+  const a = aufgaben[aktuell];
+
+  document.getElementById("statusText").textContent =
+    a.zeit + " · " + a.titel.replace(/[^\p{L}\p{N}\s&äöüÄÖÜß]/gu,"");
+
+  const fortschritt =
+    ((aktuell + 1) / aufgaben.length) * 100;
+
+  document.getElementById("progressBar").style.width =
+    fortschritt + "%";
+}
+
+function editorAnzeigen() {
+  const editor =
+    document.getElementById("aufgabenEditor");
+
+  editor.innerHTML = "";
+
+  aufgaben.forEach((a,index) => {
+    const zeile = document.createElement("div");
+    zeile.className = "editorZeile";
+
+    zeile.innerHTML = `
+      <input
+        type="time"
+        value="${a.zeit}"
+        data-index="${index}"
+        data-feld="zeit">
+
+      <input
+        type="text"
+        value="${a.titel.replace(/"/g,"&quot;")}"
+        data-index="${index}"
+        data-feld="titel">
+    `;
+
+    editor.appendChild(zeile);
+  });
+}
+
+document.getElementById("kind1")
+.addEventListener("click",() => {
+  aktuellesKind = 0;
+
+  document.getElementById("kind1")
+    .classList.add("aktiv");
+
+  document.getElementById("kind2")
+    .classList.remove("aktiv");
+
+  anzeigen();
+});
+
+document.getElementById("kind2")
+.addEventListener("click",() => {
+  aktuellesKind = 1;
+
+  document.getElementById("kind2")
+    .classList.add("aktiv");
+
+  document.getElementById("kind1")
+    .classList.remove("aktiv");
+
+  anzeigen();
+});
+
+document.getElementById("elternButton")
+.addEventListener("click",() => {
+  document.getElementById("elternBereich")
+    .classList.toggle("offen");
+
+  editorAnzeigen();
+});
+
+document.getElementById("speichern")
+.addEventListener("click",() => {
+
+  namen = [
+    document.getElementById("name1").value || "Kind 1",
+    document.getElementById("name2").value || "Kind 2"
+  ];
+
+  document
+    .querySelectorAll("#aufgabenEditor input")
+    .forEach(input => {
+      const index = Number(input.dataset.index);
+      const feld = input.dataset.feld;
+
+      aufgaben[index][feld] = input.value;
+    });
+
+  localStorage.setItem(
+    "familienplaner-namen",
+    JSON.stringify(namen)
+  );
+
+  localStorage.setItem(
+    "familienplaner-aufgaben",
+    JSON.stringify(aufgaben)
+  );
+
+  aktualisiereNamen();
+  anzeigen();
+
+  document.getElementById("elternBereich")
+    .classList.remove("offen");
+});
+
+const heute = new Date();
+
+document.getElementById("datum").textContent =
+  heute.toLocaleDateString("de-DE", {
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+  });
+
+aktualisiereNamen();
+anzeigen();
+
+/* Status automatisch aktualisieren */
+setInterval(anzeigen,60000);
+
+</script>
 </body>
 </html>
