@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Familienplaner</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f5f7;
+      color: #222;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      margin-bottom: 6px;
+    }
+
+    #datum {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .kinder {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .kind {
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .kind.aktiv {
+      border-color: #333;
+      background: #e7eefc;
+    }
+
+    .aufgabe {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 14px;
+      font-size: 22px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .haken {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border: 3px solid #bbb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .aufgabe.erledigt {
+      opacity: 0.5;
+    }
+
+    .aufgabe.erledigt .haken {
+      background: #45a85a;
+      color: white;
+      border-color: #45a85a;
+    }
+
+    .zeit {
+      display: block;
+      font-size: 15px;
+      color: #777;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <h1>Unser Familienplaner</h1>
+    <div id="datum"></div>
+
+    <div class="kinder">
+      <button class="kind aktiv" data-kind="Kind 1">👧 Kind 1</button>
+      <button class="kind" data-kind="Kind 2">👦 Kind 2</button>
+    </div>
+
+    <div id="aufgaben"></div>
+  </main>
+
+  <script>
+    let aktuellesKind = "Kind 1";
+
+    const aufgaben = [
+      { id: "zaehne-morgens", text: "🪥 Zähne putzen", zeit: "Morgens" },
+      { id: "turnbeutel", text: "🎒 Turnbeutel packen", zeit: "Mittwoch", tag: 3 },
+      { id: "zimmer", text: "🧸 Zimmer aufräumen", zeit: "Nachmittags" },
+      { id: "zaehne-abends", text: "🪥 Zähne putzen", zeit: "Abends" }
+    ];
+
+    const heute = new Date();
+    const datumSchluessel = heute.toISOString().slice(0, 10);
+
+    document.getElementById("datum").textContent =
+      heute.toLocaleDateString("de-DE", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+
+    function speicherKey(id) {
+      return "familienplaner-" + datumSchluessel + "-" + aktuellesKind + "-" + id;
+    }
+
+    function anzeigen() {
+      const bereich = document.getElementById("aufgaben");
+      bereich.innerHTML = "";
+
+      aufgaben.forEach(aufgabe => {
+        if (aufgabe.tag !== undefined && heute.getDay() !== aufgabe.tag) {
+          return;
+        }
+
+        const erledigt = localStorage.getItem(speicherKey(aufgabe.id)) === "ja";
+
+        const button = document.createElement("button");
+        button.className = "aufgabe" + (erledigt ? " erledigt" : "");
+
+        button.innerHTML = `
+          <span class="haken">${erledigt ? "✓" : ""}</span>
+          <span>
+            ${aufgabe.text}
+            <span class="zeit">${aufgabe.zeit}</span>
+          </span>
+        `;
+
+        button.addEventListener("click", () => {
+          const key = speicherKey(aufgabe.id);
+
+          if (localStorage.getItem(key) === "ja") {
+            localStorage.removeItem(key);
+          } else {
+            localStorage.setItem(key, "ja");
+          }
+
+          anzeigen();
+        });
+
+        bereich.appendChild(button);
+      });
+    }
+
+    document.querySelectorAll(".kind").forEach(button => {
+      button.addEventListener("click", () => {
+        aktuellesKind = button.dataset.kind;
+
+        document.querySelectorAll(".kind").forEach(k =>
+          k.classList.remove("aktiv")
+        );
+
+        button.classList.add("aktiv");
+        anzeigen();
+      });
+    });
+
+    anzeigen();
+  </script>
+</body>
+</html>
