@@ -2,268 +2,632 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#fff8fb">
 <title>Unser Familienplaner</title>
 
 <style>
-:root {
-  --pink:#ffd6e3;
-  --orange:#ffe1c2;
-  --yellow:#fff1b8;
-  --green:#dff1c5;
-  --blue:#d3ecfa;
-  --purple:#e5d7f8;
-  --card:#fff;
-  --text:#263238;
-  --muted:#68757d;
-  --accent:#ec4d88;
+:root{
+  --bg:#fff8fb; --card:#ffffff; --text:#263238; --muted:#6c757d;
+  --pink:#ffd6e3; --orange:#ffe1c2; --yellow:#fff1b8; --green:#dff1c5;
+  --blue:#d3ecfa; --purple:#e5d7f8; --accent:#ed4d88; --border:#e7e2e4;
+  --shadow:0 8px 24px rgba(55,35,45,.08);
 }
-
-* { box-sizing:border-box; }
-
-body {
+*{box-sizing:border-box}
+html,body{
   margin:0;
-  background:#f7f7f8;
+  background:var(--bg);
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
+button,input,select,textarea{font:inherit}
+button{touch-action:manipulation}
+body{min-height:100vh}
 
-header {
+header{
   position:sticky;
   top:0;
-  z-index:10;
-  background:rgba(255,255,255,.96);
-  border-bottom:1px solid #ddd;
-  padding:14px;
+  z-index:20;
+  background:rgba(255,248,251,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border)
 }
 
-.headerTop {
-  max-width:900px;
+.topbar{
+  max-width:980px;
   margin:auto;
+  padding:12px 14px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
+  gap:12px
 }
 
-h1 {
-  margin:0;
-  font-size:27px;
-}
+.brand h1{font-size:25px;margin:0}
+.brand small{color:var(--muted)}
 
-#datum {
-  color:var(--muted);
-  margin-top:3px;
-}
-
-.elternButton {
+.settingsBtn{
   border:0;
-  border-radius:12px;
+  border-radius:13px;
+  padding:11px 14px;
   background:#ececef;
-  padding:12px 15px;
-  font-size:16px;
+  font-weight:700
 }
 
-.app {
-  max-width:900px;
+.wrap{
+  max-width:980px;
   margin:auto;
-  padding:16px 16px 70px;
+  padding:14px 14px 70px
 }
 
-.kinder {
+.hero{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  align-items:stretch;
+  margin-bottom:14px
+}
+
+.clockCard,.birthdayCard{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:var(--shadow)
+}
+
+.clockCard{
+  padding:14px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0
+}
+
+.analog{
+  position:relative;
+  width:108px;
+  height:108px;
+  flex:0 0 108px;
+  border:5px solid #333;
+  border-radius:50%;
+  background:#fff
+}
+
+.analog .mark{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:3px;
+  height:9px;
+  background:#333;
+  transform-origin:50% 45px;
+  border-radius:3px
+}
+
+.hand{
+  position:absolute;
+  left:50%;
+  bottom:50%;
+  transform-origin:50% 100%;
+  border-radius:5px
+}
+
+.hour{
+  width:5px;
+  height:28px;
+  background:#263238;
+  margin-left:-2.5px
+}
+
+.minute{
+  width:4px;
+  height:39px;
+  background:#1976d2;
+  margin-left:-2px
+}
+
+.second{
+  width:2px;
+  height:43px;
+  background:#ed4d88;
+  margin-left:-1px
+}
+
+.centerDot{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:12px;
+  height:12px;
+  margin:-6px;
+  border-radius:50%;
+  background:#263238
+}
+
+.digital{
+  font-size:34px;
+  font-weight:800;
+  line-height:1.05
+}
+
+.digitalLabel{
+  margin-top:5px;
+  color:var(--muted)
+}
+
+.birthdayCard{
+  padding:14px 18px;
+  min-width:235px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:linear-gradient(135deg,#fff,#fff0f5)
+}
+
+.birthdayTitle{
+  font-size:14px;
+  color:var(--muted);
+  font-weight:700
+}
+
+.birthdayCount{
+  font-size:34px;
+  font-weight:900;
+  color:var(--accent)
+}
+
+.birthdayDate{
+  font-weight:700
+}
+
+.children{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
-  margin-bottom:16px;
+  margin-bottom:12px
 }
 
-.kind {
-  min-height:70px;
-  border:2px solid #ddd;
+.childBtn{
+  min-height:64px;
+  border:2px solid var(--border);
+  background:#fff;
   border-radius:18px;
-  background:white;
-  font-size:20px;
-  font-weight:700;
+  font-size:19px;
+  font-weight:800
 }
 
-.kind.aktiv {
+.childBtn.active{
   border-color:var(--accent);
-  background:#fff0f5;
+  background:#fff0f5
 }
 
-.status {
-  background:white;
-  border-radius:18px;
-  padding:16px;
-  margin-bottom:18px;
-  border:2px solid #eee;
-}
-
-.statusTitel {
-  font-weight:800;
-  font-size:18px;
-}
-
-#statusText {
-  margin-top:5px;
-  color:var(--muted);
-}
-
-.progress {
-  height:10px;
-  background:#eee;
-  border-radius:20px;
-  margin-top:12px;
-  overflow:hidden;
-}
-
-#progressBar {
-  height:100%;
-  width:0;
-  background:var(--accent);
-  transition:.3s;
-}
-
-.gruppeTitel {
-  margin:22px 4px 8px;
-  font-size:14px;
-  font-weight:800;
-  color:var(--muted);
-  letter-spacing:.7px;
-}
-
-.aufgabe {
-  width:100%;
+.tabs{
   display:grid;
-  grid-template-columns:75px 1fr 54px;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  background:#efecef;
+  padding:5px;
+  border-radius:16px;
+  margin-bottom:14px
+}
+
+.tab{
+  border:0;
+  background:transparent;
+  border-radius:12px;
+  padding:12px;
+  font-weight:800;
+  color:#62666a
+}
+
+.tab.active{
+  background:#fff;
+  color:var(--text);
+  box-shadow:0 2px 8px rgba(0,0,0,.08)
+}
+
+.status{
+  background:#fff;
+  border:2px solid #f0d7e1;
+  border-radius:20px;
+  padding:15px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow)
+}
+
+.statusTop{
+  display:flex;
   align-items:center;
-  gap:12px;
+  justify-content:space-between;
+  gap:10px
+}
+
+.statusTitle{
+  font-weight:900;
+  font-size:18px
+}
+
+.statusNow{
+  font-weight:800;
+  color:var(--accent);
+  text-align:right
+}
+
+.statusText{
+  margin-top:6px;
+  color:var(--muted)
+}
+
+.progress{
+  height:10px;
+  border-radius:10px;
+  background:#eee;
+  margin-top:12px;
+  overflow:hidden
+}
+
+.progressBar{
+  height:100%;
+  background:var(--accent);
+  width:0;
+  transition:width .4s
+}
+
+.groupTitle{
+  margin:22px 4px 8px;
+  font-size:13px;
+  font-weight:900;
+  color:var(--muted);
+  letter-spacing:.8px
+}
+
+.task{
+  width:100%;
   border:2px solid transparent;
   border-radius:20px;
-  padding:14px;
+  padding:13px 14px;
   margin-bottom:9px;
+  display:grid;
+  grid-template-columns:105px 1fr 50px;
+  align-items:center;
+  gap:12px;
   text-align:left;
   color:var(--text);
-  font:inherit;
+  box-shadow:0 2px 8px rgba(50,30,40,.04)
 }
 
-.aufgabe.aktuell {
+.task.current{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(236,77,136,.12);
+  box-shadow:0 0 0 3px rgba(237,77,136,.12)
 }
 
-.aufgabe.erledigt {
-  opacity:.48;
+.task.done{
+  opacity:.48
 }
 
-.zeit {
-  font-size:18px;
-  font-weight:800;
+.taskTime{
+  font-weight:900;
+  font-size:17px
 }
 
-.inhalt strong {
+.taskMain strong{
   display:block;
-  font-size:19px;
+  font-size:18px
 }
 
-.inhalt small {
+.taskMain small{
   display:block;
-  color:#526069;
-  font-size:14px;
+  color:#566169;
   margin-top:3px;
+  font-size:14px;
+  line-height:1.25
 }
 
-.haken {
-  width:46px;
-  height:46px;
-  justify-self:end;
+.check{
+  width:44px;
+  height:44px;
   border-radius:50%;
   border:3px solid rgba(0,0,0,.18);
+  background:rgba(255,255,255,.7);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:27px;
-  font-weight:bold;
-  background:rgba(255,255,255,.65);
+  font-size:25px;
+  font-weight:900
 }
 
-.erledigt .haken {
+.done .check{
   background:#43a85b;
   border-color:#43a85b;
-  color:white;
+  color:#fff
 }
 
-.eltern {
-  display:none;
-  max-width:900px;
-  margin:16px auto;
-  padding:16px;
-  background:white;
-  border-radius:20px;
-  border:2px solid #ddd;
+.weekHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px
 }
 
-.eltern.offen { display:block; }
-
-.eltern h2 { margin-top:0; }
-
-.feld {
-  margin-bottom:15px;
+.weekHeader h2{
+  margin:0;
+  font-size:21px
 }
 
-.feld label {
-  display:block;
-  font-weight:700;
-  margin-bottom:5px;
+.weekSub{
+  color:var(--muted);
+  font-size:14px
 }
 
-.feld input {
-  width:100%;
-  min-height:46px;
-  border:1px solid #bbb;
-  border-radius:10px;
-  padding:10px;
-  font-size:17px;
-}
-
-.editorZeile {
+.weekGrid{
   display:grid;
-  grid-template-columns:80px 1fr;
-  gap:8px;
-  margin-bottom:8px;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+  margin-bottom:14px
 }
 
-.editorZeile input {
-  min-width:0;
-}
-
-.speichern {
-  width:100%;
-  min-height:52px;
-  border:0;
+.dayPill{
+  border:1px solid var(--border);
+  background:#fff;
   border-radius:14px;
-  background:#263238;
-  color:white;
-  font-size:18px;
-  font-weight:700;
+  padding:9px 5px;
+  text-align:center
 }
 
-.hinweis {
+.dayPill.today{
+  border-color:var(--accent);
+  background:#fff0f5
+}
+
+.dayPill b{
+  display:block
+}
+
+.dayPill span{
+  font-size:12px;
+  color:var(--muted)
+}
+
+.weekTask{
+  width:100%;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:17px;
+  padding:13px;
+  margin-bottom:8px;
+  display:grid;
+  grid-template-columns:72px 1fr 46px;
+  align-items:center;
+  gap:10px;
+  text-align:left
+}
+
+.weekTask.done{
+  opacity:.48
+}
+
+.weekTask .dayLabel{
+  font-weight:900;
+  color:#6b6370
+}
+
+.weekTask .check{
+  width:40px;
+  height:40px;
+  font-size:22px
+}
+
+.empty{
+  padding:22px;
+  text-align:center;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  color:var(--muted)
+}
+
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(30,20,25,.38);
+  z-index:50;
+  padding:12px;
+  overflow:auto
+}
+
+.overlay.open{
+  display:block
+}
+
+.panel{
+  max-width:900px;
+  margin:20px auto;
+  background:#fff;
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)
+}
+
+.panelHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  position:sticky;
+  top:-18px;
+  background:#fff;
+  padding:12px 0;
+  z-index:2
+}
+
+.panelHead h2{
+  margin:0
+}
+
+.closeBtn{
+  border:0;
+  background:#eee;
+  border-radius:12px;
+  padding:10px 13px;
+  font-weight:800
+}
+
+.settingsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.field{
+  margin-bottom:12px
+}
+
+.field label{
+  display:block;
+  font-weight:800;
+  margin-bottom:5px
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid #bbb;
+  border-radius:11px;
+  padding:10px;
+  background:#fff
+}
+
+.field textarea{
+  min-height:65px;
+  resize:vertical
+}
+
+.settingsSection{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid var(--border)
+}
+
+.settingsSection h3{
+  margin:0 0 10px
+}
+
+.help{
   font-size:13px;
   color:var(--muted);
-  margin-top:10px;
+  margin-top:4px
 }
 
-@media(max-width:600px) {
-  h1 { font-size:22px; }
-  .aufgabe {
-    grid-template-columns:62px 1fr 48px;
-    padding:12px;
-  }
-  .zeit { font-size:16px; }
-  .inhalt strong { font-size:17px; }
+.editorRow{
+  display:grid;
+  grid-template-columns:95px 95px 1.2fr 1.8fr 44px;
+  gap:7px;
+  margin-bottom:7px;
+  align-items:center
+}
+
+.editorRow input{
+  width:100%;
+  border:1px solid #c7c7c7;
+  border-radius:9px;
+  padding:9px;
+  min-width:0
+}
+
+.deleteBtn{
+  border:0;
+  background:#fbe1e8;
+  border-radius:10px;
+  height:40px;
+  font-weight:900;
+  color:#9b244e
+}
+
+.weekEditorRow{
+  display:grid;
+  grid-template-columns:130px 1fr 44px;
+  gap:7px;
+  margin-bottom:7px
+}
+
+.weekEditorRow select,
+.weekEditorRow input{
+  width:100%;
+  border:1px solid #c7c7c7;
+  border-radius:9px;
+  padding:9px;
+  min-width:0
+}
+
+.addBtn{
+  border:1px dashed #aaa;
+  background:#fafafa;
+  border-radius:11px;
+  padding:10px 12px;
+  font-weight:800
+}
+
+.saveBtn{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  background:#263238;
+  color:#fff;
+  min-height:54px;
+  font-weight:900;
+  font-size:18px;
+  margin-top:18px
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%);
+  background:#263238;
+  color:#fff;
+  padding:11px 16px;
+  border-radius:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:100
+}
+
+.toast.show{
+  opacity:1
+}
+
+@media(max-width:720px){
+  .hero{grid-template-columns:1fr}
+  .birthdayCard{min-width:0}
+  .clockCard{justify-content:center}
+  .digital{font-size:30px}
+  .task{grid-template-columns:88px 1fr 46px}
+  .weekGrid{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .dayPill{padding:8px 2px;font-size:12px}
+  .settingsGrid{grid-template-columns:1fr}
+  .editorRow{grid-template-columns:1fr 1fr 44px}
+  .editorRow .titleInput,.editorRow .textInput{grid-column:1 / span 3}
+  .weekEditorRow{grid-template-columns:105px 1fr 44px}
+}
+
+@media(max-width:460px){
+  .brand h1{font-size:21px}
+  .analog{width:94px;height:94px;flex-basis:94px}
+  .analog .mark{transform-origin:50% 38px}
+  .hour{height:25px}
+  .minute{height:34px}
+  .second{height:38px}
+  .task{grid-template-columns:72px 1fr 42px;padding:11px}
+  .taskTime{font-size:15px}
+  .taskMain strong{font-size:16px}
+  .children{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -271,406 +635,2433 @@ h1 {
 <body>
 
 <header>
-  <div class="headerTop">
-    <div>
+  <div class="topbar">
+    <div class="brand">
       <h1>🌈 Mein Tag</h1>
-      <div id="datum"></div>
+      <small id="dateText"></small>
     </div>
-    <button class="elternButton" id="elternButton">⚙️ Eltern</button>
+    <button class="settingsBtn" id="settingsBtn">⚙️ Eltern</button>
   </div>
 </header>
 
-<section class="eltern" id="elternBereich">
-  <h2>Elternbereich</h2>
+<main class="wrap">
 
-  <div class="feld">
-    <label>Name Kind 1</label>
-    <input id="name1">
-  </div>
+  <section class="hero">
 
-  <div class="feld">
-    <label>Name Kind 2</label>
-    <input id="name2">
-  </div>
+    <div class="clockCard">
+      <div class="analog" id="analogClock" aria-label="Analoge Uhr">
+        <div class="hand hour" id="hourHand"></div>
+        <div class="hand minute" id="minuteHand"></div>
+        <div class="hand second" id="secondHand"></div>
+        <div class="centerDot"></div>
+      </div>
 
-  <h3>Tagesablauf bearbeiten</h3>
-  <div id="aufgabenEditor"></div>
-
-  <button class="speichern" id="speichern">
-    Änderungen speichern
-  </button>
-
-  <div class="hinweis">
-    Die Einstellungen werden nur auf diesem iPad gespeichert.
-  </div>
-</section>
-
-<main class="app">
-
-  <div class="kinder">
-    <button class="kind aktiv" id="kind1"></button>
-    <button class="kind" id="kind2"></button>
-  </div>
-
-  <section class="status">
-    <div class="statusTitel">💗 Wir sind gerade hier</div>
-    <div id="statusText"></div>
-
-    <div class="progress">
-      <div id="progressBar"></div>
+      <div>
+        <div class="digital" id="digitalClock">--:--</div>
+        <div class="digitalLabel">Aktuelle Uhrzeit</div>
+      </div>
     </div>
+
+    <div class="birthdayCard">
+      <div class="birthdayTitle">
+        🎂 Geburtstag am
+        <span id="birthdayDateLabel">14.11.</span>
+      </div>
+      <div class="birthdayCount" id="birthdayCount">–</div>
+      <div class="birthdayDate" id="birthdayText">
+        Tage bis zum Geburtstag
+      </div>
+    </div>
+
   </section>
 
-  <div id="liste"></div>
+  <section class="children">
+    <button class="childBtn active" id="child0"></button>
+    <button class="childBtn" id="child1"></button>
+  </section>
+
+  <section class="tabs">
+    <button class="tab active" data-tab="today">Heute</button>
+    <button class="tab" data-tab="week">Diese Woche</button>
+  </section>
+
+  <section id="todayView">
+
+    <section class="status">
+      <div class="statusTop">
+        <div class="statusTitle">💗 Wir sind gerade hier</div>
+        <div class="statusNow" id="statusNow"></div>
+      </div>
+
+      <div class="statusText" id="statusText"></div>
+
+      <div class="progress">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+    </section>
+
+    <div id="todayList"></div>
+
+  </section>
+
+  <section id="weekView" hidden>
+
+    <div class="weekHeader">
+      <div>
+        <h2>📅 Diese Woche</h2>
+        <div class="weekSub" id="weekRange"></div>
+      </div>
+
+      <div class="weekSub" id="weekChild"></div>
+    </div>
+
+    <div class="weekGrid" id="weekGrid"></div>
+
+    <div id="weekTasks"></div>
+
+  </section>
 
 </main>
 
+<div class="overlay" id="settingsOverlay">
+
+  <section class="panel">
+
+    <div class="panelHead">
+      <h2>⚙️ Elternbereich</h2>
+      <button class="closeBtn" id="closeSettings">Schließen</button>
+    </div>
+
+    <div class="settingsGrid">
+
+      <div class="field">
+        <label>Name Kind 1</label>
+        <input id="name0" type="text">
+      </div>
+
+      <div class="field">
+        <label>Name Kind 2</label>
+        <input id="name1" type="text">
+      </div>
+
+      <div class="field">
+        <label>Geburtstag (TT.MM.)</label>
+        <input
+          id="birthdayInput"
+          type="text"
+          inputmode="numeric"
+          placeholder="14.11."
+        >
+        <div class="help">
+          Der Countdown verwendet jedes Jahr automatisch den nächsten Geburtstag.
+        </div>
+      </div>
+
+    </div>
+
+    <section class="settingsSection">
+
+      <h3>🕒 Tagesablauf bearbeiten</h3>
+
+      <div class="field">
+        <label>Wochentag</label>
+        <select id="routineDay"></select>
+
+        <div class="help">
+          Montag bis Freitag sind zunächst wie deine Vorlage angelegt.
+          Samstag und Sonntag haben eigene Routinen.
+        </div>
+      </div>
+
+      <div id="routineEditor"></div>
+
+      <button class="addBtn" id="addRoutineTask">
+        ＋ Aufgabe hinzufügen
+      </button>
+
+    </section>
+
+    <section class="settingsSection">
+
+      <h3>✅ Wochenaufgaben</h3>
+
+      <div class="field">
+        <label>Für welches Kind?</label>
+        <select id="weekChildSelect"></select>
+      </div>
+
+      <div id="weekEditor"></div>
+
+      <button class="addBtn" id="addWeekTask">
+        ＋ Wochenaufgabe hinzufügen
+      </button>
+
+    </section>
+
+    <button class="saveBtn" id="saveSettings">
+      Änderungen speichern
+    </button>
+
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Gespeichert ✓</div>
+
 <script>
-const standardAufgaben = [
-  {
-    zeit:"06:00",
-    titel:"☀️ Aufstehen",
-    text:"Ich stehe auf, gehe auf die Toilette und ziehe mich an.",
-    gruppe:"MORGEN"
-  },
-  {
-    zeit:"06:15",
-    titel:"🍎 Frühstück",
-    text:"Frühstücken und Energie für den Tag tanken.",
-    gruppe:"MORGEN"
-  },
-  {
-    zeit:"06:35",
-    titel:"🪥 Zähne, Haare, Tasche",
-    text:"Zähne putzen, Haare machen und Schultasche kontrollieren.",
-    gruppe:"MORGEN"
-  },
-  {
-    zeit:"06:50",
-    titel:"👟 Fertig machen",
-    text:"Jacke und Schuhe an – los geht's.",
-    gruppe:"MORGEN"
-  },
-  {
-    zeit:"06:55",
-    titel:"🚌 Zum Schulbus",
-    text:"Auf zum Schulbus.",
-    gruppe:"MORGEN"
-  },
-  {
-    zeit:"07:00",
-    titel:"🎓 Schule",
-    text:"Schule, lernen, spielen und Freunde treffen.",
-    gruppe:"SCHULE"
-  },
-  {
-    zeit:"16:00",
-    titel:"🏠 Ankommen",
-    text:"Wieder zu Hause ankommen und kurz durchatmen.",
-    gruppe:"NACHMITTAG"
-  },
-  {
-    zeit:"16:05",
-    titel:"🍎 Snack & erzählen",
-    text:"Etwas essen, trinken und vom Tag erzählen.",
-    gruppe:"NACHMITTAG"
-  },
-  {
-    zeit:"16:30",
-    titel:"🧩 Freie Zeit",
-    text:"Spielen, basteln oder rausgehen.",
-    gruppe:"NACHMITTAG"
-  },
-  {
-    zeit:"17:15",
-    titel:"📝 Hausaufgaben",
-    text:"Schulische Aufgaben erledigen.",
-    gruppe:"NACHMITTAG"
-  },
-  {
-    zeit:"17:45",
-    titel:"⚽ Bewegung",
-    text:"Bewegen, rausgehen oder mit der Familie spielen.",
-    gruppe:"NACHMITTAG"
-  },
-  {
-    zeit:"18:15",
-    titel:"🍽️ Abendessen",
-    text:"Gemeinsam Abendessen.",
-    gruppe:"ABEND"
-  },
-  {
-    zeit:"18:45",
-    titel:"🧸 Aufräumen & Schlafsachen",
-    text:"Aufräumen und Schlafsachen anziehen.",
-    gruppe:"ABEND"
-  },
-  {
-    zeit:"19:00",
-    titel:"🛁 Waschen & Zähne",
-    text:"Waschen, Zähne putzen und Toilette.",
-    gruppe:"ABEND"
-  },
-  {
-    zeit:"19:20",
-    titel:"❤️ Kuscheln & Vorlesen",
-    text:"Kuscheln, lesen und über den Tag sprechen.",
-    gruppe:"ABEND"
-  },
-  {
-    zeit:"19:30",
-    titel:"🌙 Schlafen",
-    text:"Licht aus – gute Nacht.",
-    gruppe:"ABEND"
-  }
+
+const COLORS=[
+  "#ffd6e3",
+  "#ffe1c2",
+  "#fff1b8",
+  "#dff1c5",
+  "#d3ecfa",
+  "#e5d7f8"
 ];
 
-let namen =
-  JSON.parse(localStorage.getItem("familienplaner-namen")) ||
-  ["Kind 1","Kind 2"];
+const DAY_NAMES=[
+  "Sonntag",
+  "Montag",
+  "Dienstag",
+  "Mittwoch",
+  "Donnerstag",
+  "Freitag",
+  "Samstag"
+];
 
-let aufgaben =
-  JSON.parse(localStorage.getItem("familienplaner-aufgaben")) ||
-  standardAufgaben;
+const DAY_SHORT=[
+  "So",
+  "Mo",
+  "Di",
+  "Mi",
+  "Do",
+  "Fr",
+  "Sa"
+];
 
-let aktuellesKind = 0;
+const STORAGE_KEY="familienplaner-v4";
 
-function datumKey() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const t = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${t}`;
+function uid(prefix="id"){
+  return prefix+"-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);
 }
 
-function erledigtKey(index) {
-  return "fp-erledigt-" +
-    datumKey() + "-" +
-    aktuellesKind + "-" +
-    index;
-}
+function schoolDay(){
+  return [
 
-function zeitInMinuten(zeit) {
-  const teile = zeit.split(":");
-  return Number(teile[0]) * 60 + Number(teile[1]);
-}
+    {
+      id:"wd01",
+      start:"06:00",
+      end:"06:15",
+      title:"☀️ Aufstehen",
+      text:"Ich stehe auf, gehe auf die Toilette und ziehe mich an.",
+      group:"MORGEN"
+    },
 
-function aktuelleAufgabe() {
-  const jetzt = new Date();
-  const minuten = jetzt.getHours()*60 + jetzt.getMinutes();
+    {
+      id:"wd02",
+      start:"06:15",
+      end:"06:35",
+      title:"🍎 Frühstück",
+      text:"Ich frühstücke und starte gestärkt in den Tag.",
+      group:"MORGEN"
+    },
 
-  let aktuell = 0;
+    {
+      id:"wd03",
+      start:"06:35",
+      end:"06:50",
+      title:"🪥 Zähne, Haare, Tasche",
+      text:"Ich putze meine Zähne, mache meine Haare und kontrolliere meine Schultasche.",
+      group:"MORGEN"
+    },
 
-  for(let i=0;i<aufgaben.length;i++) {
-    if(zeitInMinuten(aufgaben[i].zeit) <= minuten) {
-      aktuell = i;
+    {
+      id:"wd04",
+      start:"06:50",
+      end:"06:55",
+      title:"👟 Fertig machen",
+      text:"Jacke, Schuhe – und los geht's!",
+      group:"MORGEN"
+    },
+
+    {
+      id:"wd05",
+      start:"06:55",
+      end:"07:00",
+      title:"🚌 Zum Schulbus",
+      text:"Wir gehen zum Schulbus.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"wd06",
+      start:"07:00",
+      end:"16:00",
+      title:"🎓 Schule",
+      text:"Ich habe Schule, lerne, spiele mit Freunden und erlebe viele Dinge.",
+      group:"SCHULE"
+    },
+
+    {
+      id:"wd07",
+      start:"16:00",
+      end:"16:05",
+      title:"🏠 Ankommen",
+      text:"Ich bin wieder zu Hause und darf erst einmal ankommen.",
+      group:"NACHMITTAG"
+    },
+
+    {
+      id:"wd08",
+      start:"16:05",
+      end:"16:30",
+      title:"🍎 Snack & erzählen",
+      text:"Ich esse etwas, trinke und erzähle, wie mein Tag war.",
+      group:"NACHMITTAG"
+    },
+
+    {
+      id:"wd09",
+      start:"16:30",
+      end:"17:15",
+      title:"🧩 Freie Zeit",
+      text:"Ich spiele, bastle oder gehe raus.",
+      group:"NACHMITTAG"
+    },
+
+    {
+      id:"wd10",
+      start:"17:15",
+      end:"17:45",
+      title:"📝 Hausaufgaben",
+      text:"Ich erledige meine Hausaufgaben.",
+      group:"NACHMITTAG"
+    },
+
+    {
+      id:"wd11",
+      start:"17:45",
+      end:"18:15",
+      title:"⚽ Bewegung",
+      text:"Ich bewege mich, gehe raus oder spiele mit der Familie.",
+      group:"NACHMITTAG"
+    },
+
+    {
+      id:"wd12",
+      start:"18:15",
+      end:"18:45",
+      title:"🍽️ Abendessen",
+      text:"Wir essen gemeinsam Abendessen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"wd13",
+      start:"18:45",
+      end:"19:00",
+      title:"🧸 Aufräumen & Schlafsachen",
+      text:"Ich räume auf und ziehe meine Schlafsachen an.",
+      group:"ABEND"
+    },
+
+    {
+      id:"wd14",
+      start:"19:00",
+      end:"19:20",
+      title:"🛁 Waschen & Zähne",
+      text:"Ich wasche mich, putze meine Zähne und gehe auf die Toilette.",
+      group:"ABEND"
+    },
+
+    {
+      id:"wd15",
+      start:"19:20",
+      end:"19:30",
+      title:"❤️ Kuscheln & Vorlesen",
+      text:"Wir kuscheln, lesen und sprechen über den Tag.",
+      group:"ABEND"
+    },
+
+    {
+      id:"wd16",
+      start:"19:30",
+      end:"23:59",
+      title:"🌙 Schlafen",
+      text:"Licht aus – gute Nacht!",
+      group:"ABEND"
     }
+
+  ];
+}
+
+function saturday(){
+  return [
+
+    {
+      id:"sa01",
+      start:"07:30",
+      end:"08:00",
+      title:"☀️ Aufstehen",
+      text:"Gemütlich in den Samstag starten.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"sa02",
+      start:"08:00",
+      end:"08:30",
+      title:"🥐 Frühstück",
+      text:"Gemeinsam frühstücken.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"sa03",
+      start:"08:30",
+      end:"09:00",
+      title:"🪥 Zähne & fertig machen",
+      text:"Zähne, Haare und anziehen.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"sa04",
+      start:"09:00",
+      end:"12:00",
+      title:"🎨 Familienzeit / Freizeit",
+      text:"Spielen, Ausflug, Sport oder etwas Schönes zusammen machen.",
+      group:"TAG"
+    },
+
+    {
+      id:"sa05",
+      start:"12:00",
+      end:"13:00",
+      title:"🍽️ Mittagessen",
+      text:"Mittagessen und kurz ausruhen.",
+      group:"TAG"
+    },
+
+    {
+      id:"sa06",
+      start:"13:00",
+      end:"18:00",
+      title:"🌳 Freie Zeit / Unternehmung",
+      text:"Der Nachmittag ist flexibel.",
+      group:"TAG"
+    },
+
+    {
+      id:"sa07",
+      start:"18:00",
+      end:"19:00",
+      title:"🍽️ Abendessen",
+      text:"Gemeinsam Abendessen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"sa08",
+      start:"19:00",
+      end:"19:30",
+      title:"🛁 Waschen & Zähne",
+      text:"Waschen, Zähne putzen und Schlafsachen anziehen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"sa09",
+      start:"19:30",
+      end:"20:00",
+      title:"❤️ Kuscheln & Vorlesen",
+      text:"Zur Ruhe kommen und lesen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"sa10",
+      start:"20:00",
+      end:"23:59",
+      title:"🌙 Schlafen",
+      text:"Gute Nacht!",
+      group:"ABEND"
+    }
+
+  ];
+}
+
+function sunday(){
+  return [
+
+    {
+      id:"su01",
+      start:"08:00",
+      end:"08:30",
+      title:"☀️ Aufstehen",
+      text:"Ruhig in den Sonntag starten.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"su02",
+      start:"08:30",
+      end:"09:15",
+      title:"🥐 Frühstück",
+      text:"Gemeinsam frühstücken.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"su03",
+      start:"09:15",
+      end:"09:45",
+      title:"🪥 Zähne & fertig machen",
+      text:"Zähne, Haare und anziehen.",
+      group:"MORGEN"
+    },
+
+    {
+      id:"su04",
+      start:"09:45",
+      end:"12:00",
+      title:"🌈 Familienzeit",
+      text:"Spielen, rausgehen oder etwas zusammen unternehmen.",
+      group:"TAG"
+    },
+
+    {
+      id:"su05",
+      start:"12:00",
+      end:"13:00",
+      title:"🍽️ Mittagessen",
+      text:"Gemeinsam Mittagessen.",
+      group:"TAG"
+    },
+
+    {
+      id:"su06",
+      start:"13:00",
+      end:"17:30",
+      title:"🧩 Freie Zeit",
+      text:"Ein entspannter Nachmittag.",
+      group:"TAG"
+    },
+
+    {
+      id:"su07",
+      start:"17:30",
+      end:"18:00",
+      title:"🎒 Für Montag vorbereiten",
+      text:"Schultasche, Kleidung und wichtige Sachen bereitlegen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"su08",
+      start:"18:00",
+      end:"18:45",
+      title:"🍽️ Abendessen",
+      text:"Gemeinsam Abendessen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"su09",
+      start:"18:45",
+      end:"19:10",
+      title:"🛁 Waschen & Zähne",
+      text:"Waschen, Zähne putzen und Schlafsachen anziehen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"su10",
+      start:"19:10",
+      end:"19:30",
+      title:"❤️ Kuscheln & Vorlesen",
+      text:"Zur Ruhe kommen und lesen.",
+      group:"ABEND"
+    },
+
+    {
+      id:"su11",
+      start:"19:30",
+      end:"23:59",
+      title:"🌙 Schlafen",
+      text:"Gute Nacht!",
+      group:"ABEND"
+    }
+
+  ];
+}
+
+function makeDefaults(){
+
+  const routines={
+    0:sunday(),
+    1:schoolDay(),
+    2:schoolDay(),
+    3:schoolDay(),
+    4:schoolDay(),
+    5:schoolDay(),
+    6:saturday()
+  };
+
+  return {
+
+    names:[
+      "Kind 1",
+      "Kind 2"
+    ],
+
+    birthday:"14.11.",
+
+    routines:routines,
+
+    weekly:[
+
+      [
+        {
+          id:"w01",
+          day:3,
+          text:"🎒 Turnbeutel für Mittwoch packen"
+        },
+        {
+          id:"w02",
+          day:5,
+          text:"🧺 Schmutzwäsche einsammeln"
+        },
+        {
+          id:"w03",
+          day:6,
+          text:"🧹 Zimmer aufräumen"
+        }
+      ],
+
+      [
+        {
+          id:"w11",
+          day:3,
+          text:"🎒 Turnbeutel für Mittwoch packen"
+        },
+        {
+          id:"w12",
+          day:5,
+          text:"🧺 Schmutzwäsche einsammeln"
+        },
+        {
+          id:"w13",
+          day:6,
+          text:"🧹 Zimmer aufräumen"
+        }
+      ]
+
+    ]
+
+  };
+}
+
+function loadData(){
+
+  try{
+
+    const saved=
+      JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+      );
+
+    if(
+      saved &&
+      saved.routines &&
+      saved.weekly
+    ){
+      return saved;
+    }
+
+  }catch(e){}
+
+  const d=makeDefaults();
+
+  try{
+
+    const oldNames=
+      JSON.parse(
+        localStorage.getItem(
+          "familienplaner-namen"
+        )
+      );
+
+    if(
+      Array.isArray(oldNames) &&
+      oldNames.length>=2
+    ){
+      d.names=[
+        oldNames[0],
+        oldNames[1]
+      ];
+    }
+
+  }catch(e){}
+
+  return d;
+}
+
+let data=loadData();
+
+let currentChild=0;
+
+let activeTab="today";
+
+let editDay=
+  new Date().getDay();
+
+let editWeekChild=0;
+
+const $=
+  id =>
+    document.getElementById(id);
+
+function saveData(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+}
+
+function localDateKey(d=new Date()){
+
+  return (
+    d.getFullYear()+
+    "-"+
+    String(
+      d.getMonth()+1
+    ).padStart(2,"0")+
+    "-"+
+    String(
+      d.getDate()
+    ).padStart(2,"0")
+  );
+
+}
+
+function weekStart(d=new Date()){
+
+  const x=
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate()
+    );
+
+  const day=
+    (x.getDay()+6)%7;
+
+  x.setDate(
+    x.getDate()-day
+  );
+
+  return x;
+}
+
+function weekKey(){
+
+  return localDateKey(
+    weekStart()
+  );
+
+}
+
+function dailyDoneKey(taskId){
+
+  return (
+    "fp-done-"+
+    localDateKey()+
+    "-"+
+    currentChild+
+    "-"+
+    taskId
+  );
+
+}
+
+function weeklyDoneKey(taskId){
+
+  return (
+    "fp-week-"+
+    weekKey()+
+    "-"+
+    currentChild+
+    "-"+
+    taskId
+  );
+
+}
+
+function isDone(key){
+
+  return (
+    localStorage.getItem(key)==="1"
+  );
+
+}
+
+function toggleDone(key){
+
+  if(isDone(key)){
+    localStorage.removeItem(key);
+  }else{
+    localStorage.setItem(
+      key,
+      "1"
+    );
   }
 
-  return aktuell;
 }
 
-function aktualisiereNamen() {
-  document.getElementById("kind1").textContent =
-    "👧 " + namen[0];
+function timeToMin(t){
 
-  document.getElementById("kind2").textContent =
-    "👦 " + namen[1];
+  if(
+    !t ||
+    !t.includes(":")
+  ){
+    return 0;
+  }
 
-  document.getElementById("name1").value = namen[0];
-  document.getElementById("name2").value = namen[1];
+  const parts=
+    t.split(":").map(Number);
+
+  return (
+    parts[0]*60+
+    parts[1]
+  );
+
 }
 
-function anzeigen() {
-  const liste = document.getElementById("liste");
-  liste.innerHTML = "";
+function escapeHtml(s){
 
-  const aktuell = aktuelleAufgabe();
-  let letzteGruppe = "";
+  return String(
+    s ?? ""
+  ).replace(
+    /[&<>'"]/g,
+    function(c){
 
-  aufgaben.forEach((a,index) => {
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        "'":"&#39;",
+        '"':"&quot;"
+      }[c];
 
-    if(a.gruppe !== letzteGruppe) {
-      const titel = document.createElement("div");
-      titel.className = "gruppeTitel";
-      titel.textContent = a.gruppe;
-      liste.appendChild(titel);
-      letzteGruppe = a.gruppe;
+    }
+  );
+
+}
+
+function updateClock(){
+
+  const n=
+    new Date();
+
+  const s=
+    n.getSeconds();
+
+  const m=
+    n.getMinutes()+
+    s/60;
+
+  const h=
+    (n.getHours()%12)+
+    m/60;
+
+  $("hourHand").style.transform=
+    "rotate("+
+    (h*30)+
+    "deg)";
+
+  $("minuteHand").style.transform=
+    "rotate("+
+    (m*6)+
+    "deg)";
+
+  $("secondHand").style.transform=
+    "rotate("+
+    (s*6)+
+    "deg)";
+
+  $("digitalClock").textContent=
+    n.toLocaleTimeString(
+      "de-DE",
+      {
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit"
+      }
+    );
+
+  $("dateText").textContent=
+    n.toLocaleDateString(
+      "de-DE",
+      {
+        weekday:"long",
+        day:"numeric",
+        month:"long"
+      }
+    );
+
+}
+
+function buildClockMarks(){
+
+  const c=
+    $("analogClock");
+
+  for(
+    let i=0;
+    i<12;
+    i++
+  ){
+
+    const m=
+      document.createElement(
+        "div"
+      );
+
+    m.className="mark";
+
+    m.style.transform=
+      "translate(-50%,-50%) rotate("+
+      (i*30)+
+      "deg) translateY(-40px)";
+
+    c.appendChild(m);
+
+  }
+
+}
+
+function parseBirthday(){
+
+  const m=
+    String(
+      data.birthday || ""
+    ).match(
+      /(\d{1,2})\D+(\d{1,2})/
+    );
+
+  if(!m){
+    return {
+      day:14,
+      month:11
+    };
+  }
+
+  return {
+
+    day:
+      Math.min(
+        31,
+        Math.max(
+          1,
+          Number(m[1])
+        )
+      ),
+
+    month:
+      Math.min(
+        12,
+        Math.max(
+          1,
+          Number(m[2])
+        )
+      )
+
+  };
+
+}
+
+function updateBirthday(){
+
+  const parsed=
+    parseBirthday();
+
+  const day=
+    parsed.day;
+
+  const month=
+    parsed.month;
+
+  const now=
+    new Date();
+
+  const year=
+    now.getFullYear();
+
+  let targetYear=
+    year;
+
+  const todayUTC=
+    Date.UTC(
+      year,
+      now.getMonth(),
+      now.getDate()
+    );
+
+  let targetUTC=
+    Date.UTC(
+      targetYear,
+      month-1,
+      day
+    );
+
+  if(
+    targetUTC <
+    todayUTC
+  ){
+
+    targetYear++;
+
+    targetUTC=
+      Date.UTC(
+        targetYear,
+        month-1,
+        day
+      );
+
+  }
+
+  const days=
+    Math.round(
+      (
+        targetUTC-
+        todayUTC
+      )/
+      86400000
+    );
+
+  $("birthdayDateLabel").textContent=
+    String(day).padStart(2,"0")+
+    "."+
+    String(month).padStart(2,"0")+
+    ".";
+
+  if(days===0){
+
+    $("birthdayCount").textContent=
+      "HEUTE! 🎉";
+
+    $("birthdayText").textContent=
+      "Alles Gute zum Geburtstag!";
+
+  }else{
+
+    $("birthdayCount").textContent=
+      days;
+
+    $("birthdayText").textContent=
+      days===1
+      ?
+      "Tag bis zum Geburtstag"
+      :
+      "Tage bis zum Geburtstag";
+
+  }
+
+}
+
+function renderNames(){
+
+  $("child0").textContent=
+    "👧 "+
+    (
+      data.names[0] ||
+      "Kind 1"
+    );
+
+  $("child1").textContent=
+    "👦 "+
+    (
+      data.names[1] ||
+      "Kind 2"
+    );
+
+  $("child0").classList.toggle(
+    "active",
+    currentChild===0
+  );
+
+  $("child1").classList.toggle(
+    "active",
+    currentChild===1
+  );
+
+  $("weekChild").textContent=
+    data.names[currentChild] ||
+    (
+      "Kind "+
+      (currentChild+1)
+    );
+
+}
+
+function currentTaskInfo(tasks){
+
+  const now=
+    new Date();
+
+  const currentMinutes=
+    now.getHours()*60+
+    now.getMinutes();
+
+  if(!tasks.length){
+
+    return {
+      type:"empty",
+      index:-1,
+      progress:0
+    };
+
+  }
+
+  const sorted=
+    [...tasks].sort(
+      function(a,b){
+        return (
+          timeToMin(a.start)-
+          timeToMin(b.start)
+        );
+      }
+    );
+
+  const first=
+    timeToMin(
+      sorted[0].start
+    );
+
+  const last=
+    Math.max(
+      ...sorted.map(
+        function(t){
+          return timeToMin(
+            t.end ||
+            t.start
+          );
+        }
+      )
+    );
+
+  for(
+    let i=0;
+    i<sorted.length;
+    i++
+  ){
+
+    const start=
+      timeToMin(
+        sorted[i].start
+      );
+
+    const end=
+      timeToMin(
+        sorted[i].end ||
+        sorted[i].start
+      )+1;
+
+    if(
+      currentMinutes>=start &&
+      currentMinutes<end
+    ){
+
+      const progress=
+        last>first
+        ?
+        Math.max(
+          0,
+          Math.min(
+            100,
+            (
+              currentMinutes-first
+            )/
+            (
+              last-first
+            )*
+            100
+          )
+        )
+        :
+        0;
+
+      return {
+
+        type:"current",
+
+        task:
+          sorted[i],
+
+        index:
+          tasks.findIndex(
+            function(t){
+              return (
+                t.id===
+                sorted[i].id
+              );
+            }
+          ),
+
+        progress:
+          progress
+
+      };
+
     }
 
-    const fertig =
-      localStorage.getItem(erledigtKey(index)) === "ja";
+  }
 
-    const button = document.createElement("button");
+  if(
+    currentMinutes<
+    first
+  ){
 
-    button.className =
-      "aufgabe" +
-      (fertig ? " erledigt" : "") +
-      (index === aktuell ? " aktuell" : "");
+    return {
 
-    const farben = [
-      "#ffd6e3",
-      "#ffe1c2",
-      "#fff1b8",
-      "#dff1c5",
-      "#d3ecfa",
-      "#e5d7f8"
-    ];
+      type:"before",
 
-    button.style.background =
-      farben[index % farben.length];
+      task:
+        sorted[0],
 
-    button.innerHTML = `
-      <span class="zeit">${a.zeit}</span>
+      index:-1,
 
-      <span class="inhalt">
-        <strong>${a.titel}</strong>
-        <small>${a.text}</small>
-      </span>
+      progress:0
 
-      <span class="haken">
-        ${fertig ? "✓" : ""}
-      </span>
-    `;
+    };
 
-    button.addEventListener("click", () => {
-      const key = erledigtKey(index);
+  }
 
-      if(localStorage.getItem(key) === "ja") {
-        localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key,"ja");
+  if(
+    currentMinutes>=
+    last
+  ){
+
+    return {
+
+      type:"after",
+
+      task:
+        sorted[
+          sorted.length-1
+        ],
+
+      index:-1,
+
+      progress:100
+
+    };
+
+  }
+
+  const next=
+    sorted.find(
+      function(t){
+        return (
+          timeToMin(t.start)>
+          currentMinutes
+        );
+      }
+    );
+
+  const progress=
+    last>first
+    ?
+    Math.max(
+      0,
+      Math.min(
+        100,
+        (
+          currentMinutes-first
+        )/
+        (
+          last-first
+        )*
+        100
+      )
+    )
+    :
+    0;
+
+  return {
+
+    type:"gap",
+
+    task:next,
+
+    index:-1,
+
+    progress:
+      progress
+
+  };
+
+}
+
+function renderToday(){
+
+  const day=
+    new Date().getDay();
+
+  const tasks=
+    data.routines[day] ||
+    [];
+
+  const info=
+    currentTaskInfo(tasks);
+
+  $("todayList").innerHTML=
+    "";
+
+  if(
+    info.type==="current"
+  ){
+
+    $("statusNow").textContent=
+      info.task.start+
+      "–"+
+      info.task.end;
+
+    $("statusText").textContent=
+      info.task.title+
+      " · "+
+      info.task.text;
+
+  }
+
+  else if(
+    info.type==="before"
+  ){
+
+    $("statusNow").textContent=
+      "Noch nicht gestartet";
+
+    $("statusText").textContent=
+      "Der erste Punkt beginnt um "+
+      info.task.start+
+      ": "+
+      info.task.title;
+
+  }
+
+  else if(
+    info.type==="after"
+  ){
+
+    $("statusNow").textContent=
+      "Für heute geschafft";
+
+    $("statusText").textContent=
+      "Der Tagesplan ist für heute beendet. 🌙";
+
+  }
+
+  else if(
+    info.type==="gap"
+  ){
+
+    $("statusNow").textContent=
+      "Pause";
+
+    $("statusText").textContent=
+      "Als Nächstes um "+
+      info.task.start+
+      ": "+
+      info.task.title;
+
+  }
+
+  else{
+
+    $("statusNow").textContent=
+      "Kein Plan";
+
+    $("statusText").textContent=
+      "Für heute sind noch keine Aufgaben angelegt.";
+
+  }
+
+  $("progressBar").style.width=
+    (
+      info.progress ||
+      0
+    )+
+    "%";
+
+  let group="";
+
+  tasks.forEach(
+    function(t,i){
+
+      if(
+        t.group!==group
+      ){
+
+        const g=
+          document.createElement(
+            "div"
+          );
+
+        g.className=
+          "groupTitle";
+
+        g.textContent=
+          t.group ||
+          "TAGESABLAUF";
+
+        $("todayList").appendChild(
+          g
+        );
+
+        group=
+          t.group;
+
       }
 
-      anzeigen();
-    });
+      const done=
+        isDone(
+          dailyDoneKey(
+            t.id
+          )
+        );
 
-    liste.appendChild(button);
-  });
+      const button=
+        document.createElement(
+          "button"
+        );
 
-  const a = aufgaben[aktuell];
+      button.className=
+        "task"+
+        (
+          done
+          ?
+          " done"
+          :
+          ""
+        )+
+        (
+          info.type==="current" &&
+          info.index===i
+          ?
+          " current"
+          :
+          ""
+        );
 
-  document.getElementById("statusText").textContent =
-    a.zeit + " · " + a.titel.replace(/[^\p{L}\p{N}\s&äöüÄÖÜß]/gu,"");
+      button.style.background=
+        COLORS[
+          i%
+          COLORS.length
+        ];
 
-  const fortschritt =
-    ((aktuell + 1) / aufgaben.length) * 100;
+      button.innerHTML=
+        '<span class="taskTime">'+
+        escapeHtml(t.start)+
+        (
+          t.end
+          ?
+          "–"+
+          escapeHtml(t.end)
+          :
+          ""
+        )+
+        '</span>'+
+        '<span class="taskMain">'+
+        '<strong>'+
+        escapeHtml(t.title)+
+        '</strong>'+
+        '<small>'+
+        escapeHtml(t.text)+
+        '</small>'+
+        '</span>'+
+        '<span class="check">'+
+        (
+          done
+          ?
+          "✓"
+          :
+          ""
+        )+
+        '</span>';
 
-  document.getElementById("progressBar").style.width =
-    fortschritt + "%";
-}
+      button.addEventListener(
+        "click",
+        function(){
 
-function editorAnzeigen() {
-  const editor =
-    document.getElementById("aufgabenEditor");
+          toggleDone(
+            dailyDoneKey(
+              t.id
+            )
+          );
 
-  editor.innerHTML = "";
+          renderToday();
 
-  aufgaben.forEach((a,index) => {
-    const zeile = document.createElement("div");
-    zeile.className = "editorZeile";
+        }
+      );
 
-    zeile.innerHTML = `
-      <input
-        type="time"
-        value="${a.zeit}"
-        data-index="${index}"
-        data-feld="zeit">
+      $("todayList").appendChild(
+        button
+      );
 
-      <input
-        type="text"
-        value="${a.titel.replace(/"/g,"&quot;")}"
-        data-index="${index}"
-        data-feld="titel">
-    `;
-
-    editor.appendChild(zeile);
-  });
-}
-
-document.getElementById("kind1")
-.addEventListener("click",() => {
-  aktuellesKind = 0;
-
-  document.getElementById("kind1")
-    .classList.add("aktiv");
-
-  document.getElementById("kind2")
-    .classList.remove("aktiv");
-
-  anzeigen();
-});
-
-document.getElementById("kind2")
-.addEventListener("click",() => {
-  aktuellesKind = 1;
-
-  document.getElementById("kind2")
-    .classList.add("aktiv");
-
-  document.getElementById("kind1")
-    .classList.remove("aktiv");
-
-  anzeigen();
-});
-
-document.getElementById("elternButton")
-.addEventListener("click",() => {
-  document.getElementById("elternBereich")
-    .classList.toggle("offen");
-
-  editorAnzeigen();
-});
-
-document.getElementById("speichern")
-.addEventListener("click",() => {
-
-  namen = [
-    document.getElementById("name1").value || "Kind 1",
-    document.getElementById("name2").value || "Kind 2"
-  ];
-
-  document
-    .querySelectorAll("#aufgabenEditor input")
-    .forEach(input => {
-      const index = Number(input.dataset.index);
-      const feld = input.dataset.feld;
-
-      aufgaben[index][feld] = input.value;
-    });
-
-  localStorage.setItem(
-    "familienplaner-namen",
-    JSON.stringify(namen)
+    }
   );
 
-  localStorage.setItem(
-    "familienplaner-aufgaben",
-    JSON.stringify(aufgaben)
+  const due=
+    (
+      data.weekly[currentChild] ||
+      []
+    ).filter(
+      function(t){
+        return (
+          t.day===
+          day
+        );
+      }
+    );
+
+  if(
+    due.length
+  ){
+
+    const g=
+      document.createElement(
+        "div"
+      );
+
+    g.className=
+      "groupTitle";
+
+    g.textContent=
+      "WOCHENAUFGABEN HEUTE";
+
+    $("todayList").appendChild(
+      g
+    );
+
+    due.forEach(
+      function(t,i){
+
+        const done=
+          isDone(
+            weeklyDoneKey(
+              t.id
+            )
+          );
+
+        const button=
+          document.createElement(
+            "button"
+          );
+
+        button.className=
+          "weekTask"+
+          (
+            done
+            ?
+            " done"
+            :
+            ""
+          );
+
+        button.style.background=
+          COLORS[
+            (
+              tasks.length+i
+            )%
+            COLORS.length
+          ];
+
+        button.innerHTML=
+          '<span class="dayLabel">'+
+          DAY_SHORT[day]+
+          '</span>'+
+          '<span>'+
+          '<strong>'+
+          escapeHtml(t.text)+
+          '</strong>'+
+          '<small style="display:block;color:#566169;margin-top:3px">'+
+          'Wochenaufgabe'+
+          '</small>'+
+          '</span>'+
+          '<span class="check">'+
+          (
+            done
+            ?
+            "✓"
+            :
+            ""
+          )+
+          '</span>';
+
+        button.addEventListener(
+          "click",
+          function(){
+
+            toggleDone(
+              weeklyDoneKey(
+                t.id
+              )
+            );
+
+            renderToday();
+
+          }
+        );
+
+        $("todayList").appendChild(
+          button
+        );
+
+      }
+    );
+
+  }
+
+}
+
+function renderWeek(){
+
+  const start=
+    weekStart();
+
+  const end=
+    new Date(start);
+
+  end.setDate(
+    start.getDate()+6
   );
 
-  aktualisiereNamen();
-  anzeigen();
+  $("weekRange").textContent=
+    start.toLocaleDateString(
+      "de-DE",
+      {
+        day:"2-digit",
+        month:"2-digit"
+      }
+    )+
+    " – "+
+    end.toLocaleDateString(
+      "de-DE",
+      {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric"
+      }
+    );
 
-  document.getElementById("elternBereich")
-    .classList.remove("offen");
-});
+  $("weekGrid").innerHTML=
+    "";
 
-const heute = new Date();
+  for(
+    let i=0;
+    i<7;
+    i++
+  ){
 
-document.getElementById("datum").textContent =
-  heute.toLocaleDateString("de-DE", {
-    weekday:"long",
-    day:"numeric",
-    month:"long"
-  });
+    const d=
+      new Date(start);
 
-aktualisiereNamen();
-anzeigen();
+    d.setDate(
+      start.getDate()+i
+    );
 
-/* Status automatisch aktualisieren */
-setInterval(anzeigen,60000);
+    const p=
+      document.createElement(
+        "div"
+      );
+
+    p.className=
+      "dayPill"+
+      (
+        localDateKey(d)===
+        localDateKey()
+        ?
+        " today"
+        :
+        ""
+      );
+
+    p.innerHTML=
+      "<b>"+
+      DAY_SHORT[
+        d.getDay()
+      ]+
+      "</b>"+
+      "<span>"+
+      d.getDate()+
+      "."+
+      (
+        d.getMonth()+1
+      )+
+      ".</span>";
+
+    $("weekGrid").appendChild(
+      p
+    );
+
+  }
+
+  const list=
+    [
+      ...(
+        data.weekly[currentChild] ||
+        []
+      )
+    ].sort(
+      function(a,b){
+        return (
+          a.day-
+          b.day
+        );
+      }
+    );
+
+  const box=
+    $("weekTasks");
+
+  box.innerHTML=
+    "";
+
+  if(
+    !list.length
+  ){
+
+    box.innerHTML=
+      '<div class="empty">'+
+      'Für dieses Kind sind noch keine Wochenaufgaben angelegt.'+
+      '</div>';
+
+    return;
+
+  }
+
+  list.forEach(
+    function(t,i){
+
+      const done=
+        isDone(
+          weeklyDoneKey(
+            t.id
+          )
+        );
+
+      const button=
+        document.createElement(
+          "button"
+        );
+
+      button.className=
+        "weekTask"+
+        (
+          done
+          ?
+          " done"
+          :
+          ""
+        );
+
+      button.style.background=
+        COLORS[
+          i%
+          COLORS.length
+        ];
+
+      button.innerHTML=
+        '<span class="dayLabel">'+
+        (
+          DAY_NAMES[t.day] ||
+          ""
+        )+
+        '</span>'+
+        '<span>'+
+        '<strong>'+
+        escapeHtml(t.text)+
+        '</strong>'+
+        '</span>'+
+        '<span class="check">'+
+        (
+          done
+          ?
+          "✓"
+          :
+          ""
+        )+
+        '</span>';
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          toggleDone(
+            weeklyDoneKey(
+              t.id
+            )
+          );
+
+          renderWeek();
+
+        }
+      );
+
+      box.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+function switchTab(tab){
+
+  activeTab=
+    tab;
+
+  document.querySelectorAll(
+    ".tab"
+  ).forEach(
+    function(button){
+
+      button.classList.toggle(
+        "active",
+        button.dataset.tab===
+        tab
+      );
+
+    }
+  );
+
+  $("todayView").hidden=
+    tab!=="today";
+
+  $("weekView").hidden=
+    tab!=="week";
+
+  if(
+    tab==="today"
+  ){
+
+    renderToday();
+
+  }else{
+
+    renderWeek();
+
+  }
+
+}
+
+function fillSettings(){
+
+  $("name0").value=
+    data.names[0] ||
+    "";
+
+  $("name1").value=
+    data.names[1] ||
+    "";
+
+  $("birthdayInput").value=
+    data.birthday ||
+    "14.11.";
+
+  $("routineDay").innerHTML=
+    DAY_NAMES.map(
+      function(n,i){
+
+        return (
+          '<option value="'+
+          i+
+          '">'+
+          n+
+          '</option>'
+        );
+
+      }
+    ).join("");
+
+  $("routineDay").value=
+    editDay;
+
+  $("weekChildSelect").innerHTML=
+    data.names.map(
+      function(n,i){
+
+        return (
+          '<option value="'+
+          i+
+          '">'+
+          escapeHtml(
+            n ||
+            (
+              "Kind "+
+              (i+1)
+            )
+          )+
+          '</option>'
+        );
+
+      }
+    ).join("");
+
+  $("weekChildSelect").value=
+    editWeekChild;
+
+  renderRoutineEditor();
+
+  renderWeekEditor();
+
+}
+
+function renderRoutineEditor(){
+
+  const tasks=
+    data.routines[editDay] ||
+    [];
+
+  const box=
+    $("routineEditor");
+
+  box.innerHTML=
+    "";
+
+  tasks.forEach(
+    function(t,i){
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "editorRow";
+
+      row.innerHTML=
+        '<input type="time" data-r="'+
+        i+
+        '" data-f="start" value="'+
+        escapeHtml(t.start)+
+        '">'+
+
+        '<input type="time" data-r="'+
+        i+
+        '" data-f="end" value="'+
+        escapeHtml(
+          t.end ||
+          ""
+        )+
+        '">'+
+
+        '<input class="titleInput" data-r="'+
+        i+
+        '" data-f="title" value="'+
+        escapeHtml(t.title)+
+        '" placeholder="Titel">'+
+
+        '<input class="textInput" data-r="'+
+        i+
+        '" data-f="text" value="'+
+        escapeHtml(t.text)+
+        '" placeholder="Beschreibung">'+
+
+        '<button class="deleteBtn" data-del-r="'+
+        i+
+        '">×</button>';
+
+      box.appendChild(
+        row
+      );
+
+    }
+  );
+
+  box.querySelectorAll(
+    "input"
+  ).forEach(
+    function(input){
+
+      input.addEventListener(
+        "input",
+        function(){
+
+          const i=
+            Number(
+              input.dataset.r
+            );
+
+          data.routines[editDay][i][input.dataset.f]=
+            input.value;
+
+        }
+      );
+
+    }
+  );
+
+  box.querySelectorAll(
+    "[data-del-r]"
+  ).forEach(
+    function(button){
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          data.routines[editDay].splice(
+            Number(
+              button.dataset.delR
+            ),
+            1
+          );
+
+          renderRoutineEditor();
+
+        }
+      );
+
+    }
+  );
+
+}
+
+function renderWeekEditor(){
+
+  const tasks=
+    data.weekly[editWeekChild] ||
+    [];
+
+  const box=
+    $("weekEditor");
+
+  box.innerHTML=
+    "";
+
+  tasks.forEach(
+    function(t,i){
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "weekEditorRow";
+
+      row.innerHTML=
+        '<select data-w="'+
+        i+
+        '" data-f="day">'+
+
+        DAY_NAMES.map(
+          function(n,d){
+
+            return (
+              '<option value="'+
+              d+
+              '" '+
+              (
+                d===t.day
+                ?
+                "selected"
+                :
+                ""
+              )+
+              '>'+
+              n+
+              '</option>'
+            );
+
+          }
+        ).join("")+
+
+        '</select>'+
+
+        '<input data-w="'+
+        i+
+        '" data-f="text" value="'+
+        escapeHtml(t.text)+
+        '" placeholder="Wochenaufgabe">'+
+
+        '<button class="deleteBtn" data-del-w="'+
+        i+
+        '">×</button>';
+
+      box.appendChild(
+        row
+      );
+
+    }
+  );
+
+  box.querySelectorAll(
+    "select,input"
+  ).forEach(
+    function(input){
+
+      input.addEventListener(
+        "input",
+        function(){
+
+          const i=
+            Number(
+              input.dataset.w
+            );
+
+          if(
+            input.dataset.f==="day"
+          ){
+
+            data.weekly[editWeekChild][i][input.dataset.f]=
+              Number(
+                input.value
+              );
+
+          }else{
+
+            data.weekly[editWeekChild][i][input.dataset.f]=
+              input.value;
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+  box.querySelectorAll(
+    "[data-del-w]"
+  ).forEach(
+    function(button){
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          data.weekly[editWeekChild].splice(
+            Number(
+              button.dataset.delW
+            ),
+            1
+          );
+
+          renderWeekEditor();
+
+        }
+      );
+
+    }
+  );
+
+}
+
+function openSettings(){
+
+  fillSettings();
+
+  $("settingsOverlay")
+    .classList.add(
+      "open"
+    );
+
+}
+
+function closeSettings(){
+
+  $("settingsOverlay")
+    .classList.remove(
+      "open"
+    );
+
+}
+
+function toast(
+  msg="Gespeichert ✓"
+){
+
+  $("toast").textContent=
+    msg;
+
+  $("toast")
+    .classList.add(
+      "show"
+    );
+
+  setTimeout(
+    function(){
+
+      $("toast")
+        .classList.remove(
+          "show"
+        );
+
+    },
+    1800
+  );
+
+}
+
+$("child0")
+.addEventListener(
+  "click",
+  function(){
+
+    currentChild=0;
+
+    renderNames();
+
+    if(
+      activeTab==="today"
+    ){
+      renderToday();
+    }else{
+      renderWeek();
+    }
+
+  }
+);
+
+$("child1")
+.addEventListener(
+  "click",
+  function(){
+
+    currentChild=1;
+
+    renderNames();
+
+    if(
+      activeTab==="today"
+    ){
+      renderToday();
+    }else{
+      renderWeek();
+    }
+
+  }
+);
+
+document.querySelectorAll(
+  ".tab"
+).forEach(
+  function(button){
+
+    button.addEventListener(
+      "click",
+      function(){
+
+        switchTab(
+          button.dataset.tab
+        );
+
+      }
+    );
+
+  }
+);
+
+$("settingsBtn")
+.addEventListener(
+  "click",
+  openSettings
+);
+
+$("closeSettings")
+.addEventListener(
+  "click",
+  closeSettings
+);
+
+$("settingsOverlay")
+.addEventListener(
+  "click",
+  function(event){
+
+    if(
+      event.target===
+      $("settingsOverlay")
+    ){
+      closeSettings();
+    }
+
+  }
+);
+
+$("routineDay")
+.addEventListener(
+  "change",
+  function(event){
+
+    editDay=
+      Number(
+        event.target.value
+      );
+
+    renderRoutineEditor();
+
+  }
+);
+
+$("weekChildSelect")
+.addEventListener(
+  "change",
+  function(event){
+
+    editWeekChild=
+      Number(
+        event.target.value
+      );
+
+    renderWeekEditor();
+
+  }
+);
+
+$("addRoutineTask")
+.addEventListener(
+  "click",
+  function(){
+
+    if(
+      !data.routines[editDay]
+    ){
+      data.routines[editDay]=[];
+    }
+
+    data.routines[editDay].push(
+      {
+        id:uid("r"),
+        start:"12:00",
+        end:"12:15",
+        title:"Neue Aufgabe",
+        text:"Beschreibung",
+        group:"TAG"
+      }
+    );
+
+    renderRoutineEditor();
+
+  }
+);
+
+$("addWeekTask")
+.addEventListener(
+  "click",
+  function(){
+
+    if(
+      !data.weekly[editWeekChild]
+    ){
+      data.weekly[editWeekChild]=[];
+    }
+
+    data.weekly[editWeekChild].push(
+      {
+        id:uid("w"),
+        day:1,
+        text:"Neue Wochenaufgabe"
+      }
+    );
+
+    renderWeekEditor();
+
+  }
+);
+
+$("saveSettings")
+.addEventListener(
+  "click",
+  function(){
+
+    data.names=[
+      $("name0").value.trim() ||
+      "Kind 1",
+
+      $("name1").value.trim() ||
+      "Kind 2"
+    ];
+
+    data.birthday=
+      $("birthdayInput").value.trim() ||
+      "14.11.";
+
+    Object.keys(
+      data.routines
+    ).forEach(
+      function(k){
+
+        data.routines[k].sort(
+          function(a,b){
+
+            return (
+              timeToMin(a.start)-
+              timeToMin(b.start)
+            );
+
+          }
+        );
+
+      }
+    );
+
+    saveData();
+
+    renderNames();
+
+    updateBirthday();
+
+    renderToday();
+
+    renderWeek();
+
+    fillSettings();
+
+    toast();
+
+    closeSettings();
+
+  }
+);
+
+buildClockMarks();
+
+renderNames();
+
+updateClock();
+
+updateBirthday();
+
+switchTab("today");
+
+setInterval(
+  updateClock,
+  1000
+);
+
+setInterval(
+  function(){
+
+    updateBirthday();
+
+    if(
+      activeTab==="today"
+    ){
+      renderToday();
+    }
+
+  },
+  60000
+);
 
 </script>
+
 </body>
 </html>
